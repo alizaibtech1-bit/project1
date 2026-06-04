@@ -618,9 +618,12 @@ img { max-width: 100%; display: block; }
 
 /* Brand Pillars */
 .pillars-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   gap: 32px;
+}
+.pillars-grid .pillar-card {
+  flex: 1;
+  min-width: 0;
 }
 .pillar-card {
   text-align: center;
@@ -1241,7 +1244,7 @@ img { max-width: 100%; display: block; }
   .categories-grid { grid-template-columns: repeat(2, 1fr); }
   .slider-track .product-card { min-width: calc(33.33% - 16px); }
   .hero-content h1 { font-size: 3rem; }
-  .pillars-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .pillars-grid { gap: 24px; }
   .trust-grid { grid-template-columns: repeat(3, 1fr); }
   .about-grid { gap: 40px; }
 }
@@ -1295,10 +1298,11 @@ img { max-width: 100%; display: block; }
   .hamburger { display: flex; }
   .products-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
   .categories-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .pillars-grid { grid-template-columns: 1fr; gap: 20px; }
-  .pillar-card { padding: 36px 24px 32px; }
-  .pillar-card h3 { font-size: 1.15rem; }
-  .pillar-icon { width: 60px; height: 60px; font-size: 1.6rem; margin-bottom: 18px; }
+  .pillars-grid { flex-wrap: wrap; gap: 20px; }
+  .pillars-grid .pillar-card { flex: 1 1 200px; min-width: 180px; padding: 32px 20px 28px; }
+  .pillar-card h3 { font-size: 1.1rem; }
+  .pillar-icon { width: 56px; height: 56px; font-size: 1.5rem; margin-bottom: 16px; }
+  .pillar-card p { font-size: 0.8rem; }
   .trust-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .testimonials-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
@@ -1334,7 +1338,7 @@ img { max-width: 100%; display: block; }
   .container { padding: 0 16px; }
   .products-grid { grid-template-columns: 1fr; gap: 12px; }
   .categories-grid { grid-template-columns: 1fr; gap: 12px; }
-  .values-grid { grid-template-columns: 1fr; gap: 12px; }
+
   .trust-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
   .slider-track .product-card { min-width: 100%; }
@@ -1355,59 +1359,23 @@ img { max-width: 100%; display: block; }
   .section-header { margin-bottom: 32px; }
   .section-header h2 { font-size: 1.6rem; }
   .section-header p { font-size: 0.8rem; }
-  .pillar-card { padding: 28px 20px 24px; }
-  .pillar-card .pillar-icon { width: 52px; height: 52px; font-size: 1.4rem; }
-  .pillar-card h3 { font-size: 1.05rem; }
-  .pillar-card p { font-size: 0.8rem; }
-  .about-content h2 { font-size: 1.5rem; }
-  .about-image { aspect-ratio: 4/3; }
-  .newsletter-wrap { padding: 0 8px; }
-  .newsletter-wrap h2 { font-size: 1.5rem; }
-  .newsletter-wrap p { font-size: 0.85rem; }
-  .newsletter-form button { padding: 14px 24px; font-size: 0.65rem; }
-  .product-detail-layout { gap: 16px; }
-  .product-detail-image img { aspect-ratio: 1; }
-  .product-detail-info h1 { font-size: 1.5rem; }
-  .product-price { font-size: 1.5rem; }
-  .product-detail-image .zoom-hint { display: none; }
-  .reviews-section { margin-top: 40px; padding-top: 32px; }
-  .reviews-summary { padding: 20px; }
-  .reviews-header h2 { font-size: 1.3rem; }
-  .review-card { padding: 20px; }
-  .review-form-wrap { padding: 24px; }
-  .product-card .card-body { padding: 18px 16px 14px; }
-  .product-card .card-body h3 { font-size: 1rem; }
-  .product-card .card-body .price { font-size: 1.1rem; }
-  .product-card .add-to-cart { width: calc(100% - 32px); margin: 0 16px 14px; padding: 11px 0; font-size: 0.6rem; letter-spacing: 1.5px; }
-  .product-card .card-actions button { width: 32px; height: 32px; font-size: 0.8rem; }
-  .trust-item { padding: 20px 12px; }
-  .trust-icon { font-size: 1.3rem; margin-bottom: 8px; }
-  .trust-item h4 { font-size: 0.75rem; }
-  .trust-item p { font-size: 0.65rem; }
-  .testimonial-card { padding: 28px 20px; }
-  .testimonial-card blockquote { font-size: 1rem; }
-  .category-card .cat-label { padding: 14px; }
-  .category-card .cat-label h3 { font-size: 1rem; }
-  .whatsapp-float { width: 44px; height: 44px; font-size: 1.2rem; bottom: 14px; right: 14px; }
-  .whatsapp-float .wa-tooltip { display: none; }
-  .btn:active, .product-card .add-to-cart:active, .newsletter-form button:active { opacity: 0.8; }
-  .footer-payments { flex-wrap: wrap; gap: 12px; font-size: 1.2rem; padding: 20px 0; }
-  .footer { padding: 50px 0 0; }
-  .footer-grid { gap: 28px; }
-  .footer-brand .logo img { height: 48px; }
-  .footer-brand p { font-size: 0.8rem; }
-  .footer h4 { font-size: 0.85rem; margin-bottom: 14px; }
-  .footer-links a { font-size: 0.8rem; padding: 4px 0; }
-  .footer-contact p { font-size: 0.8rem; }
-  .footer-bottom { font-size: 0.65rem; padding: 20px 0; }
-  .btn { padding: 12px 24px; font-size: 0.65rem; letter-spacing: 1.5px; }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  .slider-btn { width: 32px; height: 32px; font-size: 0.85rem; }
-  .slider-prev { left: 4px; }
-  .slider-next { right: 4px; }
+  .pillars-grid { flex-wrap: wrap; gap: 16px; }
+  .pillars-grid .pillar-card { flex: 1 1 140px; min-width: 120px; padding: 24px 16px 20px; }
+  .pillar-card .pillar-icon { width: 48px; height: 48px; font-size: 1.2rem; margin-bottom: 14px; }
+  .pillar-card h3 { font-size: 1rem; }
+  .pillar-card p { font-size: 0.75rem; }
+  .btn { padding: 10px 20px; font-size: 0.6rem; letter-spacing: 1px; }
+  .footer-payments { font-size: 1rem; gap: 8px; padding: 16px 0; }
+  .footer-payments span { font-size: 0.6rem; }
 }
 
 @media (max-width: 400px) {
+  .pillars-grid { gap: 12px; }
+  .pillars-grid .pillar-card { flex: 1 1 100%; padding: 20px 14px 18px; }
+  .pillar-card .pillar-icon { width: 40px; height: 40px; font-size: 1rem; }
+  .pillar-card h3 { font-size: 0.9rem; }
+  .pillar-card p { font-size: 0.7rem; }
+
   .container { padding: 0 12px; }
   .hero { padding: 70px 12px 50px; }
   .hero-content h1 { font-size: 1.6rem; }
