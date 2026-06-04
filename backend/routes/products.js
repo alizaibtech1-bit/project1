@@ -4,13 +4,46 @@ const Product = require('../models/Product');
 const Review = require('../models/Review');
 const { protect, admin } = require('../middleware/auth');
 const multer = require('multer');
+const https = require('https');
+const querystring = require('querystring');
+
+const fs = require('fs');
 const path = require('path');
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'uploads/'),
-  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+const upload = multer({ 
+  storage: process.env.IMGBB_API_KEY ? multer.memoryStorage() : multer.diskStorage({
+    destination: (req, file, cb) => {
+      const dir = path.join(__dirname, '..', 'uploads');
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      cb(null, dir);
+    },
+    filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+  })
 });
-const upload = multer({ storage });
+
+async function uploadToImgBB(buffer) {
+  const apiKey = process.env.IMGBB_API_KEY;
+  if (!apiKey) return null;
+  return new Promise((resolve, reject) => {
+    const data = querystring.stringify({ key: apiKey, image: buffer.toString('base64') });
+    const req = https.request({
+      hostname: 'api.imgbb.com', path: '/1/upload', method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Content-Length': Buffer.byteLength(data) }
+    }, res => {
+      let body = '';
+      res.on('data', d => body += d);
+      res.on('end', () => {
+        try {
+          const json = JSON.parse(body);
+          resolve(json.success ? json.data.url : null);
+        } catch { resolve(null); }
+      });
+    });
+    req.on('error', () => resolve(null));
+    req.write(data);
+    req.end();
+  });
+}
 
 router.get('/', async (req, res) => {
   try {
@@ -46,11 +79,19 @@ router.post('/', protect, admin, upload.single('image'), async (req, res) => {
   try {
     const { name, description, category, price, originalPrice, countInStock, isFeatured, ingredients, howToUse, skinType, rating, numReviews } = req.body;
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    let image = '';
+    if (req.file) {
+      if (process.env.IMGBB_API_KEY) {
+        image = await uploadToImgBB(req.file.buffer) || '';
+      } else {
+        image = `/uploads/${req.file.filename}`;
+      }
+    }
     const product = await Product.create({
       name, slug, description, category, price, originalPrice, countInStock,
       isFeatured: isFeatured === 'true', ingredients, howToUse, skinType,
       rating: rating || 0, numReviews: numReviews || 0,
-      image: req.file ? `/uploads/${req.file.filename}` : ''
+      image
     });
     res.status(201).json(product);
   } catch (err) {
@@ -75,7 +116,14 @@ router.put('/:id', protect, admin, upload.single('image'), async (req, res) => {
     if (skinType) product.skinType = skinType;
     if (rating) product.rating = rating;
     if (numReviews) product.numReviews = numReviews;
-    if (req.file) product.image = `/uploads/${req.file.filename}`;
+    if (req.file) {
+      if (process.env.IMGBB_API_KEY) {
+        const url = await uploadToImgBB(req.file.buffer);
+        if (url) product.image = url;
+      } else {
+        product.image = `/uploads/${req.file.filename}`;
+      }
+    }
     res.json(await product.save());
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -114,6 +162,11 @@ router.post('/:id/reviews', async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+});
+
+// Check if ImgBB is configured
+router.get('/imgbb-status', protect, admin, (req, res) => {
+  res.json({ configured: !!process.env.IMGBB_API_KEY });
 });
 
 module.exports = router;
