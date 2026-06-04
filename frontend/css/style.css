@@ -1256,7 +1256,11 @@ img { max-width: 100%; display: block; }
   transition: transform 0.5s ease;
   gap: 24px;
 }
-.slider-track .product-card { min-width: calc(25% - 21px); flex-shrink: 0; }
+.slider-track .product-card { width: calc(25% - 18px); flex-shrink: 0; }
+.slider-track .product-card .card-image { aspect-ratio: 1; }
+.slider-track .product-card .card-body { padding: 16px 16px 12px; }
+.slider-track .product-card .card-body h3 { font-size: 1rem; }
+.slider-track .product-card .add-to-cart { width: calc(100% - 32px); margin: 0 16px 14px; padding: 10px 0; font-size: 0.6rem; letter-spacing: 1.5px; }
 .slider-btn {
   position: absolute;
   top: 50%;
@@ -1276,8 +1280,8 @@ img { max-width: 100%; display: block; }
   z-index: 10;
 }
 .slider-btn:hover { background: var(--gold); color: white; border-color: var(--gold); }
-.slider-prev { left: -24px; }
-.slider-next { right: -24px; }
+.slider-prev { left: 8px; }
+.slider-next { right: 8px; }
 
 /* Testimonials */
 .testimonials-grid {
@@ -1466,7 +1470,7 @@ img { max-width: 100%; display: block; }
 @media (max-width: 1024px) {
   .products-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
   .categories-grid { grid-template-columns: repeat(2, 1fr); }
-  .slider-track .product-card { min-width: calc(33.33% - 16px); }
+  .slider-track .product-card { width: calc(33.33% - 16px); }
   .hero-content h1 { font-size: 3rem; }
   .pillars-grid { gap: 24px; }
   .trust-grid { grid-template-columns: repeat(3, 1fr); }
@@ -1530,7 +1534,7 @@ img { max-width: 100%; display: block; }
   .trust-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .testimonials-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
-  .slider-track .product-card { min-width: calc(50% - 10px); }
+  .slider-track .product-card { width: calc(50% - 12px); }
   .hero { min-height: auto; padding: 90px 20px 70px; }
   .hero-content h1 { font-size: 2.5rem; }
   .hero-content p { font-size: 0.95rem; max-width: 420px; }
@@ -1565,7 +1569,7 @@ img { max-width: 100%; display: block; }
 
   .trust-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .footer-grid { grid-template-columns: 1fr; gap: 32px; }
-  .slider-track .product-card { min-width: 100%; }
+  .slider-track .product-card { width: 100%; }
   .hero { min-height: auto; padding: 80px 16px 60px; }
   .hero-content h1 { font-size: 2rem; line-height: 1.15; }
   .hero-content p { font-size: 0.85rem; margin-bottom: 28px; }
