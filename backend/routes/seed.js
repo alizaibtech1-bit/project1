@@ -30,7 +30,6 @@ router.get('/', async (req, res) => {
     await User.create({ name: 'Admin', email: 'admin@glow.com', password: hashed, role: 'admin' });
     await User.create({ name: 'User', email: 'user@glow.com', password: hashed, role: 'user' });
 
-    // Seed reviews for the first 4 featured products
     const reviewData = [
       { productIdx: 0, name: 'Zara Ahmed', rating: 5, title: 'Holy grail facewash!', comment: 'I have been using this for a month and my skin has never looked better. The gentle formula cleans without stripping. Absolutely love it!' },
       { productIdx: 0, name: 'Fatima Khan', rating: 4, title: 'Great daily cleanser', comment: 'Very gentle on my sensitive skin. Does not cause any irritation. Would recommend to anyone with dry skin.' },
@@ -51,7 +50,6 @@ router.get('/', async (req, res) => {
       isVerified: true
     })));
 
-    // Update product ratings based on seeded reviews
     for (const p of products) {
       const productReviews = await Review.find({ product: p._id });
       if (productReviews.length > 0) {
