@@ -114,6 +114,13 @@ function renderStars(rating) {
 
 function createProductCard(p) {
   const inWishlist = false;
+  const rating = parseFloat(p.rating) || 0;
+  let starsHtml = '';
+  for (let i = 1; i <= 5; i++) {
+    if (i <= rating) starsHtml += '<i class="fas fa-star"></i>';
+    else if (i - 0.5 <= rating) starsHtml += '<i class="fas fa-star-half-alt"></i>';
+    else starsHtml += '<i class="far fa-star"></i>';
+  }
   return `
     <div class="product-card" onclick="window.location.href='product.html?id=${p._id}'">
       <div class="card-image">
@@ -129,8 +136,7 @@ function createProductCard(p) {
         <div class="card-category">${p.category}</div>
         <h3>${p.name}</h3>
         <div class="rating">
-          ${'<i class="fas fa-star"></i>'.repeat(Math.floor(p.rating || 0))}
-          ${p.rating % 1 >= 0.5 ? '<i class="fas fa-star-half-alt"></i>' : ''}
+          ${starsHtml}
           <span>(${p.numReviews || 0})</span>
         </div>
         <div class="price">
@@ -139,7 +145,7 @@ function createProductCard(p) {
         </div>
       </div>
       <button class="add-to-cart" onclick="event.stopPropagation();window.location.href='checkout.html?id=${p._id}'">
-        <i class="fas fa-phone"></i> Order Now
+        <span><i class="fas fa-phone"></i> Order Now</span>
       </button>
     </div>
   `;
