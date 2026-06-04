@@ -25,7 +25,7 @@ async function loadProduct() {
       <div class="product-detail-layout">
         <div class="product-detail-image">
           <div class="img-wrap">
-            <img src="${API.replace('/api','')}${p.image || 'https://via.placeholder.com/500?text='+encodeURIComponent(p.name)}" alt="${p.name}">
+            <img src="${imageUrl(p.image) || 'https://via.placeholder.com/500?text='+encodeURIComponent(p.name)}" alt="${p.name}">
             <div class="zoom-hint"><i class="fas fa-expand"></i></div>
           </div>
         </div>

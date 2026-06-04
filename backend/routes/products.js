@@ -45,6 +45,11 @@ async function uploadToImgBB(buffer) {
   });
 }
 
+// Check if ImgBB is configured — MUST be before /:id route
+router.get('/imgbb-status', protect, admin, (req, res) => {
+  res.json({ configured: !!process.env.IMGBB_API_KEY });
+});
+
 router.get('/', async (req, res) => {
   try {
     const { category, search, featured, sort } = req.query;
@@ -162,11 +167,6 @@ router.post('/:id/reviews', async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-});
-
-// Check if ImgBB is configured
-router.get('/imgbb-status', protect, admin, (req, res) => {
-  res.json({ configured: !!process.env.IMGBB_API_KEY });
 });
 
 module.exports = router;

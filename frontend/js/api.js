@@ -136,6 +136,12 @@ function updateDarkToggleIcon() {
   }
 })();
 
+function imageUrl(path) {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  return API.replace('/api', '') + path;
+}
+
 function renderStars(rating) {
   const num = parseFloat(rating) || 0;
   let s = '';
@@ -159,7 +165,7 @@ function createProductCard(p) {
   return `
     <div class="product-card" onclick="window.location.href='product.html?id=${p._id}'">
       <div class="card-image">
-        <img src="${API.replace('/api','')}${p.image || 'https://via.placeholder.com/300?text='+encodeURIComponent(p.name)}" alt="${p.name}" loading="lazy">
+        <img src="${imageUrl(p.image) || 'https://via.placeholder.com/300?text='+encodeURIComponent(p.name)}" alt="${p.name}" loading="lazy">
         ${p.originalPrice ? '<div class="card-badge">Sale</div>' : ''}
         <div class="card-actions">
           <button class="${inWishlist?'active':''}" onclick="event.stopPropagation();toggleWishlist('${p._id}',this)" title="Wishlist">

@@ -26,6 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('backendStatus').innerHTML = '<i class="fas fa-circle" style="color:#dc2626;font-size:0.5rem;"></i> Backend Offline — Wake it up at <a href="https://ianda-backend.onrender.com" target="_blank" style="color:var(--gold);text-decoration:underline;">ianda-backend.onrender.com</a>';
   });
 
+  // Check ImgBB status
+  fetch(`${API}/products/imgbb-status`, { headers: { 'Authorization': `Bearer ${getToken()}` } }).then(r => r.json()).then(d => {
+    if (!d.configured) {
+      const statusEl = document.getElementById('backendStatus');
+      statusEl.innerHTML += '<br><span style="font-size:0.65rem;color:var(--gold);"><i class="fas fa-exclamation-triangle"></i> Image uploads need ImgBB setup — <a href="#imgbb-setup" style="color:var(--gold);text-decoration:underline;">configure</a></span>';
+    }
+  }).catch(() => {});
+
   loadDashboard();
 });
 
@@ -114,7 +122,7 @@ async function loadAdminProducts() {
         <thead><tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Featured</th><th>Actions</th></tr></thead>
         <tbody>${products.map(p => `
           <tr>
-            <td><img src="${API.replace('/api','')}${p.image || 'https://via.placeholder.com/48?text='+encodeURIComponent(p.name)}" alt=""></td>
+            <td><img src="${imageUrl(p.image) || 'https://via.placeholder.com/48?text='+encodeURIComponent(p.name)}" alt=""></td>
             <td>${p.name}</td>
             <td>${p.category}</td>
             <td>Rs.${p.price.toFixed(2)}</td>

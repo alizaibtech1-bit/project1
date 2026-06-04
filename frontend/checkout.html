@@ -148,7 +148,7 @@
         div.innerHTML = `
           <h4 style="margin-bottom:16px;">Order Summary</h4>
           <div style="display:flex;gap:16px;padding-bottom:16px;border-bottom:1px solid rgba(0,0,0,0.08);margin-bottom:16px;">
-            <img src="${API.replace('/api','')}${p.image || 'https://via.placeholder.com/80?text='+encodeURIComponent(p.name)}" alt="${p.name}" style="width:80px;height:80px;object-fit:cover;">
+            <img src="${imageUrl(p.image) || 'https://via.placeholder.com/80?text='+encodeURIComponent(p.name)}" alt="${p.name}" style="width:80px;height:80px;object-fit:cover;">
             <div>
               <h5 style="font-size:0.95rem;font-weight:500;">${p.name}</h5>
               <p style="font-size:0.8rem;color:var(--text-light);">${p.category}</p>

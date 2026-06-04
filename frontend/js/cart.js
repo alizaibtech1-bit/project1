@@ -25,7 +25,7 @@ function renderCart() {
     subtotal += item.price * item.qty;
     itemsHtml += `
       <div class="cart-item">
-        <img src="${API.replace('/api','')}${item.image || 'https://via.placeholder.com/100?text='+encodeURIComponent(item.name)}" alt="${item.name}">
+        <img src="${imageUrl(item.image) || 'https://via.placeholder.com/100?text='+encodeURIComponent(item.name)}" alt="${item.name}">
         <div class="cart-item-info">
           <h3>${item.name}</h3>
           <div class="price">Rs.${item.price.toFixed(2)}</div>
