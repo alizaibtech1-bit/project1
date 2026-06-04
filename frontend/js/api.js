@@ -101,6 +101,41 @@ function toggleWishlist(productId, btn) {
   });
 }
 
+// Dark mode toggle
+function toggleDarkMode() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  if (isDark) {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('theme', 'light');
+  } else {
+    html.setAttribute('data-theme', 'dark');
+    localStorage.setItem('theme', 'dark');
+  }
+  updateDarkToggleIcon();
+}
+
+function updateDarkToggleIcon() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.querySelectorAll('#darkToggle i').forEach(el => {
+    el.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+  });
+}
+
+// Restore theme on load
+(function initTheme() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+  // Wait for DOM to be ready to update icons
+  if (document.readyState === 'complete') {
+    updateDarkToggleIcon();
+  } else {
+    document.addEventListener('DOMContentLoaded', updateDarkToggleIcon);
+  }
+})();
+
 function renderStars(rating) {
   const num = parseFloat(rating) || 0;
   let s = '';
