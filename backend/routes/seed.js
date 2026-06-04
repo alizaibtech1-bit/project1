@@ -2,7 +2,6 @@ const router = require('express').Router();
 const Product = require('../models/Product');
 const User = require('../models/User');
 const Review = require('../models/Review');
-const bcrypt = require('bcryptjs');
 
 router.get('/', async (req, res) => {
   try {
@@ -26,9 +25,9 @@ router.get('/', async (req, res) => {
       { name: 'Rich Moisture Cream', slug: 'rich-moisture-cream', description: 'Deeply nourishing cream with shea butter and squalane for dry skin.', price: 18500, originalPrice: 21800, category: 'Creams', countInStock: 28, rating: 4.4, numReviews: 0, image: '/uploads/cream2.jpg', skinType: 'Normal Skin', ingredients: 'Squalane, Peptides', howToUse: 'Apply after serum' }
     ]);
 
-    const hashed = await bcrypt.hash('admin123', 10);
-    await User.create({ name: 'Admin', email: 'admin@glow.com', password: hashed, role: 'admin' });
-    await User.create({ name: 'User', email: 'user@glow.com', password: hashed, role: 'user' });
+    // Password will be auto-hashed by User model pre('save') hook
+    await User.create({ name: 'Admin', email: 'admin@glow.com', password: 'admin123', role: 'admin' });
+    await User.create({ name: 'User', email: 'user@glow.com', password: 'admin123', role: 'user' });
 
     const reviewData = [
       { productIdx: 0, name: 'Zara Ahmed', rating: 5, title: 'Holy grail facewash!', comment: 'I have been using this for a month and my skin has never looked better. The gentle formula cleans without stripping. Absolutely love it!' },

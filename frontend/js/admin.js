@@ -10,6 +10,15 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('adminLogin').style.display = 'none';
   document.getElementById('adminName').textContent = user.name || 'Admin';
 
+  // Verify token is still valid (database may have been re-seeded)
+  fetch(`${API}/auth/profile`, { headers: { 'Authorization': `Bearer ${getToken()}` } }).then(r => {
+    if (!r.ok) throw new Error('Invalid token');
+  }).catch(() => {
+    localStorage.removeItem('glow_token');
+    localStorage.removeItem('glow_user');
+    window.location.reload();
+  });
+
   // Ping backend to wake it up
   fetch(API.replace('/api','')).then(r => {
     document.getElementById('backendStatus').innerHTML = '<i class="fas fa-circle" style="color:#16a34a;font-size:0.5rem;"></i> Backend Online';
