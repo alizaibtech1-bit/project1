@@ -211,7 +211,7 @@ document.getElementById('productForm')?.addEventListener('submit', async (e) => 
         return;
       }
       const data = await res.json().catch(() => ({}));
-      alert(data.message || 'Error saving product (HTTP ' + res.status + ')');
+      alert((data && data.message) || 'Error saving product (HTTP ' + res.status + '). Check backend logs.');
     } catch (err) {
       if (retries > 0) {
         setTimeout(() => trySave(retries - 1), 3000);
