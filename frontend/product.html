@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product - i&A Luxury Skincare</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loader">
+      <div class="loader-spinner"></div>
+      <div class="loader-text">i&A</div>
+    </div>
+  </div>
+
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="logo"><img src="images/logo.png" alt="i&A" style="height:64px;"></a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#products">Shop</a>
+        <a href="index.html#categories">Categories</a>
+        <a href="index.html#testimonials">Reviews</a>
+      </div>
+      <div class="nav-icons">
+        <a href="search.html"><i class="fas fa-search"></i></a>
+        <a href="wishlist.html"><i class="far fa-heart"></i></a>
+        </div>
+      <div class="hamburger" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section" style="padding-top:40px;">
+    <div class="container">
+      <div id="productDetail"></div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo"><img src="images/logo.png" alt="i&A" style="height:64px;"></div>
+          <p>Luxury skincare crafted with intention.</p>
+          <div class="footer-social">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/share/1Bj8SKVnZj/"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-pinterest-p"></i></a>
+          </div>
+        </div>
+        <div>
+          <h4>Shop</h4>
+          <div class="footer-links">
+            <a href="#">Facewash</a>
+            <a href="#">Sunblock</a>
+            <a href="#">Serums</a>
+            <a href="#">Creams</a>
+          </div>
+        </div>
+        <div>
+          <h4>Support</h4>
+          <div class="footer-links">
+            <a href="#">Shipping & Returns</a>
+            <a href="#">FAQ</a>
+            <a href="#">Contact Us</a>
+          </div>
+        </div>
+        <div class="footer-contact">
+          <h4>Contact</h4>
+          <p>hello@glowskincare.com</p>
+          <p>+1 (800) 555-0199</p>
+        </div>
+      </div>
+      <div class="footer-bottom">&copy; 2026 i&A Luxury Skincare</div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/923006593216" target="_blank" class="whatsapp-float" title="Chat on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+    <span class="wa-tooltip">Chat with us</span>
+  </a>
+  <script src="js/api.js"></script>
+  <script src="js/product.js"></script>
+</body>
+</html>

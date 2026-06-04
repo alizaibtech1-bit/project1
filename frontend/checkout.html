@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order - i&A Luxury Skincare</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <style>
+    .order-layout { display: grid; grid-template-columns: 1fr 380px; gap: 40px; align-items: start; }
+    @media (max-width: 768px) { .order-layout { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loader"><div class="loader-spinner"></div><div class="loader-text">i&A</div></div>
+  </div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="logo"><img src="images/logo.png" alt="i&A" style="height:64px;"></a>
+      <div class="nav-links"><a href="index.html">Home</a></div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="subtitle">Place Your Order</div>
+        <h2>Cash on Delivery</h2>
+      </div>
+      <div id="checkoutContent">
+        <form id="checkoutForm">
+          <div class="order-layout">
+            <div>
+              <h3 style="font-size:1.2rem;margin-bottom:20px;">Shipping Details</h3>
+              <div class="form-group"><label>Full Name</label><input type="text" id="shipName" required></div>
+              <div class="form-group"><label>Phone Number</label><input type="tel" id="shipPhone" required placeholder="+1 (555) 000-0000"></div>
+              <div class="form-group"><label>Street Address</label><input type="text" id="shipStreet" required></div>
+              <div class="form-row">
+                <div class="form-group"><label>City</label><input type="text" id="shipCity" required></div>
+                <div class="form-group"><label>State</label><input type="text" id="shipState" required></div>
+              </div>
+              <div class="form-row">
+                <div class="form-group"><label>ZIP Code</label><input type="text" id="shipZip" required></div>
+                <div class="form-group"><label>Country</label><input type="text" id="shipCountry" required value="United States"></div>
+              </div>
+              <div class="form-group"><label>Order Notes (optional)</label><textarea id="orderNotes" placeholder="Any special instructions..."></textarea></div>
+            </div>
+            <div>
+              <div id="orderSummary" style="background:var(--beige);padding:32px;position:sticky;top:100px;"></div>
+            </div>
+          </div>
+
+          <div style="text-align:center;margin-top:32px;">
+            <button type="submit" class="btn btn-gold" style="padding:18px 60px;font-size:0.85rem;">
+              <i class="fas fa-check"></i> Place Order (Cash on Delivery)
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" style="margin-top:60px;">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo"><img src="images/logo.png" alt="i&A" style="height:64px;"></div>
+          <p>Luxury skincare crafted with intention.</p>
+        </div>
+        <div><h4>Shop</h4><div class="footer-links"><a href="#">Facewash</a><a href="#">Sunblock</a><a href="#">Serums</a><a href="#">Creams</a></div></div>
+        <div><h4>Support</h4><div class="footer-links"><a href="#">Shipping & Returns</a><a href="#">Contact Us</a></div></div>
+        <div class="footer-contact"><h4>Contact</h4><p>hello@glowskincare.com</p></div>
+      </div>
+      <div class="footer-bottom">&copy; 2026 i&A Luxury Skincare</div>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script>
+    document.getElementById('loadingScreen').classList.add('hidden');
+
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get('id');
+
+    async function loadProduct() {
+      if (!productId) {
+        document.getElementById('checkoutContent').innerHTML = '<p style="text-align:center;padding:40px;">No product selected. <a href="index.html">Shop now</a></p>';
+        return;
+      }
+      try {
+        const res = await fetch(`${API}/products/${productId}`);
+        if (!res.ok) throw new Error('Not found');
+        const p = await res.json();
+        const div = document.getElementById('orderSummary');
+        div.innerHTML = `
+          <h4 style="margin-bottom:16px;">Order Summary</h4>
+          <div style="display:flex;gap:16px;padding-bottom:16px;border-bottom:1px solid rgba(0,0,0,0.08);margin-bottom:16px;">
+            <img src="${API.replace('/api','')}${p.image || 'https://via.placeholder.com/80?text='+encodeURIComponent(p.name)}" alt="${p.name}" style="width:80px;height:80px;object-fit:cover;">
+            <div>
+              <h5 style="font-size:0.95rem;font-weight:500;">${p.name}</h5>
+              <p style="font-size:0.8rem;color:var(--text-light);">${p.category}</p>
+              <p style="font-family:var(--font-serif);font-size:1.3rem;margin-top:8px;">Rs.${p.price.toFixed(2)}</p>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:0.9rem;">
+            <span>Subtotal</span><span>Rs.${p.price.toFixed(2)}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0;font-size:0.9rem;">
+            <span>Shipping</span><span style="color:#16a34a;">FREE</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:12px 0 0;font-size:1.3rem;font-family:var(--font-serif);border-top:1px solid var(--gold-light);margin-top:8px;">
+            <span>Total</span><span>Rs.${p.price.toFixed(2)}</span>
+          </div>
+          <div style="margin-top:16px;padding:12px;background:#f0fdf4;border:1px solid #bbf7d0;font-size:0.8rem;color:#166534;text-align:center;">
+            <i class="fas fa-truck"></i> Pay when you receive
+          </div>
+        `;
+        // Store product for form submit
+        window._orderProduct = p;
+      } catch (err) {
+        document.getElementById('checkoutContent').innerHTML = '<p style="text-align:center;padding:40px;">Product not found. <a href="index.html">Shop now</a></p>';
+      }
+    }
+
+    loadProduct();
+
+    document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const p = window._orderProduct;
+      if (!p) { alert('No product selected'); return; }
+
+      const order = {
+        items: [{ product: p._id, name: p.name, image: p.image, price: p.price, quantity: 1 }],
+        shippingAddress: {
+          fullName: document.getElementById('shipName').value,
+          phone: document.getElementById('shipPhone').value,
+          street: document.getElementById('shipStreet').value,
+          city: document.getElementById('shipCity').value,
+          state: document.getElementById('shipState').value,
+          zip: document.getElementById('shipZip').value,
+          country: document.getElementById('shipCountry').value
+        },
+        orderNotes: document.getElementById('orderNotes').value,
+        paymentMethod: 'Cash on Delivery',
+        itemsPrice: p.price,
+        shippingPrice: 0,
+        totalPrice: p.price
+      };
+
+      try {
+        const res = await fetch(`${API}/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(order)
+        });
+        if (res.ok) {
+          alert('Order placed! We will contact you for delivery details.');
+          window.location.href = 'index.html';
+        } else {
+          const data = await res.json();
+          alert(data.message || 'Order failed');
+        }
+      } catch (err) {
+        alert('Cannot connect to server.');
+      }
+    });
+  </script>
+  <a href="https://wa.me/923006593216" target="_blank" class="whatsapp-float" title="Chat on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+    <span class="wa-tooltip">Chat with us</span>
+  </a>
+</body>
+</html>

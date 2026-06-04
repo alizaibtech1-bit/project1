@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - i&A Luxury Skincare</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loader"><div class="loader-spinner"></div><div class="loader-text">i&A</div></div>
+  </div>
+
+  <!-- Admin Login -->
+  <div class="auth-page" id="adminLogin" style="display:none;">
+    <div class="auth-container">
+      <div class="auth-box">
+        <div class="logo"><img src="images/logo.png" alt="i&A" style="height:64px;"></div>
+        <p class="auth-subtitle">Admin Access</p>
+        <div id="adminLoginAlert"></div>
+        <form id="adminLoginForm">
+          <div class="form-group"><label>Email</label><input type="email" id="adminLoginEmail" required></div>
+          <div class="form-group"><label>Password</label><input type="password" id="adminLoginPassword" required></div>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Sign In</button>
+        </form>
+        <p class="auth-footer"><a href="index.html">Back to Store</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin App -->
+  <div id="adminApp">
+    <div class="admin-layout">
+      <aside class="admin-sidebar">
+        <div class="logo"><img src="images/logo.png" alt="i&A" style="height:64px;"></div>
+        <nav class="admin-nav">
+          <a href="#" class="active" onclick="showSection('dashboard',this)"><i class="fas fa-chart-simple"></i> <span>Dashboard</span></a>
+          <a href="#" onclick="showSection('products',this)"><i class="fas fa-box"></i> <span>Products</span></a>
+          <a href="#" onclick="showSection('orders',this)"><i class="fas fa-truck"></i> <span>Orders</span></a>
+          <a href="#" onclick="showSection('users',this)"><i class="fas fa-users"></i> <span>Users</span></a>
+          <a href="index.html"><i class="fas fa-store"></i> <span>View Store</span></a>
+          <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+        </nav>
+      </aside>
+
+      <main class="admin-main">
+        <div class="admin-header">
+          <h2 id="pageTitle">Dashboard</h2>
+          <div class="admin-user">
+            <span id="adminName">Admin</span>
+            <i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--gold);"></i>
+          </div>
+        </div>
+
+        <div class="admin-content">
+          <div id="section-dashboard">
+            <div class="stats-grid" id="statsGrid"></div>
+            <h3 style="margin:32px 0 16px;font-size:1.1rem;">Recent Orders</h3>
+            <div id="recentOrders"></div>
+          </div>
+          <div id="section-products" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+              <h3 style="font-size:1.1rem;">All Products</h3>
+              <button class="btn btn-primary" onclick="openProductModal()">+ Add Product</button>
+            </div>
+            <div id="productsTableWrap"></div>
+          </div>
+          <div id="section-orders" style="display:none;">
+            <h3 style="font-size:1.1rem;margin-bottom:24px;">All Orders</h3>
+            <div id="ordersTableWrap"></div>
+          </div>
+          <div id="section-users" style="display:none;">
+            <h3 style="font-size:1.1rem;margin-bottom:24px;">All Users</h3>
+            <div id="usersTableWrap"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Product Modal -->
+  <div class="modal" id="productModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeProductModal()">&times;</button>
+      <h3 id="modalProductTitle">Add Product</h3>
+      <form id="productForm" enctype="multipart/form-data">
+        <input type="hidden" id="editProductId">
+        <div class="form-group"><label>Name</label><input type="text" id="prodName" required></div>
+        <div class="form-group"><label>Description</label><textarea id="prodDesc" required></textarea></div>
+        <div class="form-row">
+          <div class="form-group"><label>Price ($)</label><input type="number" step="0.01" id="prodPrice" required></div>
+          <div class="form-group"><label>Original Price ($)</label><input type="number" step="0.01" id="prodOrigPrice"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Category</label>
+            <select id="prodCategory">
+              <option>Facewash</option><option>Sunblock</option><option>Serums</option><option>Creams</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Stock</label><input type="number" id="prodStock" value="10"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Rating (0-5)</label><input type="number" step="0.1" id="prodRating" value="4.5"></div>
+          <div class="form-group"><label>Reviews Count</label><input type="number" id="prodReviews" value="0"></div>
+        </div>
+        <div class="form-group"><label>Skin Type</label><input type="text" id="prodSkinType" placeholder="All Skin Types"></div>
+        <div class="form-group"><label>Ingredients</label><textarea id="prodIngredients" placeholder="List key ingredients"></textarea></div>
+        <div class="form-group"><label>How to Use</label><textarea id="prodHowToUse" placeholder="Usage instructions"></textarea></div>
+        <div class="form-group">
+          <label><input type="checkbox" id="prodFeatured"> Featured Product</label>
+        </div>
+        <div class="form-group"><label>Product Image</label><input type="file" id="prodImage" accept="image/*"></div>
+        <button type="submit" class="btn btn-gold" style="width:100%;justify-content:center;">Save Product</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Order Details Modal -->
+  <div class="modal" id="orderModal">
+    <div class="modal-content" style="max-width:700px;">
+      <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+      <h3 id="orderModalTitle">Order Details</h3>
+      <div id="orderModalBody"></div>
+    </div>
+  </div>
+
+  <a href="https://wa.me/923006593216" target="_blank" class="whatsapp-float" title="Chat on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+    <span class="wa-tooltip">Chat with us</span>
+  </a>
+  <script src="js/api.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

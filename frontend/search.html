@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search - i&A Luxury Skincare</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .search-bar { display: flex; gap: 12px; max-width: 600px; margin: 0 auto 40px; }
+    .search-bar input { flex: 1; padding: 16px 20px; border: 1px solid var(--beige-dark); font-family: var(--font-sans); font-size: 1rem; outline: none; }
+    .search-bar input:focus { border-color: var(--gold); }
+    .search-bar button { padding: 16px 32px; background: var(--charcoal); color: white; border: none; cursor: pointer; font-family: var(--font-sans); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition); }
+    .search-bar button:hover { background: var(--gold); }
+    .filter-bar { display: flex; gap: 12px; justify-content: center; margin-bottom: 40px; flex-wrap: wrap; }
+    .filter-bar select, .filter-bar button { padding: 10px 20px; border: 1px solid var(--beige-dark); font-family: var(--font-sans); font-size: 0.8rem; background: white; cursor: pointer; }
+    .filter-bar select:focus { border-color: var(--gold); outline: none; }
+  </style>
+</head>
+<body>
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loader"><div class="loader-spinner"></div><div class="loader-text">i&A</div></div>
+  </div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="logo"><img src="images/logo.png" alt="i&A" style="height:64px;"></a>
+      <div class="nav-links"><a href="index.html">Home</a><a href="index.html#products">Shop</a></div>
+      <div class="nav-icons">
+        </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="subtitle">Find Your Perfect Match</div>
+        <h2>Search Products</h2>
+      </div>
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search facewash, serums, creams..." onkeyup="searchProducts()">
+        <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="filter-bar">
+        <select id="categoryFilter" onchange="searchProducts()">
+          <option value="">All Categories</option>
+          <option value="Facewash">Facewash</option>
+          <option value="Sunblock">Sunblock</option>
+          <option value="Serums">Serums</option>
+          <option value="Creams">Creams</option>
+        </select>
+        <select id="sortFilter" onchange="searchProducts()">
+          <option value="-createdAt">Newest</option>
+          <option value="price">Price: Low to High</option>
+          <option value="-price">Price: High to Low</option>
+          <option value="-rating">Top Rated</option>
+        </select>
+      </div>
+      <div class="products-grid" id="searchResults"></div>
+      <div id="searchEmpty" style="display:none;text-align:center;padding:60px 0;">
+        <i class="fas fa-search" style="font-size:3rem;color:var(--gold-light);margin-bottom:20px;"></i>
+        <h2 style="font-weight:300;">No products found</h2>
+        <p style="color:var(--text-light);">Try a different search term or filter</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" style="margin-top:60px;">
+    <div class="container">
+      <div class="footer-brand"><div class="logo"><img src="images/logo.png" alt="i&A" style="height:64px;"></div></div>
+      <div class="footer-contact"><h4>Contact</h4><p>hello@glowskincare.com</p></div>
+      <div class="footer-bottom">&copy; 2026 i&A Luxury Skincare</div>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script>
+    document.getElementById('loadingScreen').classList.add('hidden');
+
+    async function searchProducts() {
+      const query = document.getElementById('searchInput').value;
+      const category = document.getElementById('categoryFilter').value;
+      const sort = document.getElementById('sortFilter').value;
+      const grid = document.getElementById('searchResults');
+      const empty = document.getElementById('searchEmpty');
+
+      try {
+        const params = new URLSearchParams();
+        if (query) params.append('search', query);
+        if (category) params.append('category', category);
+        if (sort) params.append('sort', sort);
+
+        const res = await fetch(`${API}/products?${params.toString()}`);
+        const products = await res.json();
+
+        if (products.length === 0) { grid.style.display = 'none'; empty.style.display = 'block'; return; }
+        grid.style.display = 'grid'; empty.style.display = 'none';
+        grid.innerHTML = products.map(p => createProductCard(p)).join('');
+      } catch (err) {
+        grid.innerHTML = '<p style="text-align:center;color:var(--text-light);">Error loading products</p>';
+      }
+    }
+    searchProducts();
+  </script>
+  <a href="https://wa.me/923006593216" target="_blank" class="whatsapp-float" title="Chat on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+    <span class="wa-tooltip">Chat with us</span>
+  </a>
+</body>
+</html>

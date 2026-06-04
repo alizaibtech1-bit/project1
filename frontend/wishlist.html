@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wishlist - i&A Luxury Skincare</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loader"><div class="loader-spinner"></div><div class="loader-text">i&A</div></div>
+  </div>
+
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="logo"><img src="images/logo.png" alt="i&A" style="height:64px;"></a>
+      <div class="nav-links"><a href="index.html">Home</a><a href="index.html#products">Shop</a></div>
+      <div class="nav-icons">
+        </div>
+    </div>
+  </nav>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="subtitle">Saved For Later</div>
+        <h2>Your Wishlist</h2>
+      </div>
+      <div class="products-grid" id="wishlistGrid"></div>
+      <div id="wishlistEmpty" style="display:none;text-align:center;padding:60px 0;">
+        <i class="far fa-heart" style="font-size:3rem;color:var(--gold-light);margin-bottom:20px;"></i>
+        <h2 style="font-weight:300;">Your wishlist is empty</h2>
+        <p style="color:var(--text-light);margin:12px 0 24px;">Save your favorite products here</p>
+        <a href="index.html" class="btn btn-outline">Shop Now</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer" style="margin-top:60px;">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand"><div class="logo"><img src="images/logo.png" alt="i&A" style="height:64px;"></div></div>
+        <div><h4>Shop</h4><div class="footer-links"><a href="#">Facewash</a><a href="#">Sunblock</a><a href="#">Serums</a><a href="#">Creams</a></div></div>
+        <div><h4>Support</h4><div class="footer-links"><a href="#">Contact</a></div></div>
+        <div class="footer-contact"><h4>Contact</h4><p>hello@glowskincare.com</p></div>
+      </div>
+      <div class="footer-bottom">&copy; 2026 i&A Luxury Skincare</div>
+    </div>
+  </footer>
+
+  <script src="js/api.js"></script>
+  <script>
+    document.getElementById('loadingScreen').classList.add('hidden');
+
+    async function loadWishlist() {
+      const token = localStorage.getItem('glow_token');
+      const grid = document.getElementById('wishlistGrid');
+      const empty = document.getElementById('wishlistEmpty');
+
+      if (!token) { grid.style.display = 'none'; empty.style.display = 'block'; empty.innerHTML = '<i class="far fa-heart" style="font-size:3rem;color:var(--gold-light);margin-bottom:20px;"></i><h2 style="font-weight:300;">Please login</h2><p style="color:var(--text-light);margin:12px 0 24px;">Login to see your wishlist</p><a href="auth.html" class="btn btn-outline">Login</a>'; return; }
+
+      try {
+        const res = await fetch(`${API}/users/wishlist`, { headers: { 'Authorization': `Bearer ${token}` } });
+        if (!res.ok) throw new Error('Auth failed');
+        const products = await res.json();
+        if (products.length === 0) { grid.style.display = 'none'; empty.style.display = 'block'; return; }
+        grid.style.display = 'grid'; empty.style.display = 'none';
+        grid.innerHTML = products.map(p => createProductCard(p)).join('');
+      } catch (err) {
+        grid.style.display = 'none'; empty.style.display = 'block';
+        empty.innerHTML = '<h2 style="font-weight:300;">Please login</h2><a href="auth.html" class="btn btn-outline" style="margin-top:16px;">Login</a>';
+      }
+    }
+    loadWishlist();
+  </script>
+  <a href="https://wa.me/923006593216" target="_blank" class="whatsapp-float" title="Chat on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+    <span class="wa-tooltip">Chat with us</span>
+  </a>
+</body>
+</html>
