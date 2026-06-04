@@ -28,7 +28,7 @@ function renderCart() {
         <img src="${API.replace('/api','')}${item.image || 'https://via.placeholder.com/100?text='+encodeURIComponent(item.name)}" alt="${item.name}">
         <div class="cart-item-info">
           <h3>${item.name}</h3>
-          <div class="price">$${item.price.toFixed(2)}</div>
+          <div class="price">Rs.${item.price.toFixed(2)}</div>
           <div class="cart-item-qty">
             <button onclick="updateCartQty(${idx}, -1)">−</button>
             <span>${item.qty}</span>
@@ -37,13 +37,13 @@ function renderCart() {
           </div>
         </div>
         <div style="font-family:var(--font-serif);font-size:1.2rem;min-width:80px;text-align:right;">
-          $${(item.price * item.qty).toFixed(2)}
+          Rs.${(item.price * item.qty).toFixed(2)}
         </div>
       </div>
     `;
   });
 
-  const shipping = subtotal > 75 ? 0 : 8.99;
+  const shipping = subtotal > 5000 ? 0 : 199;
   const total = subtotal + shipping;
 
   content.innerHTML = `
@@ -51,10 +51,10 @@ function renderCart() {
       <div class="cart-items">${itemsHtml}</div>
       <div class="cart-summary">
         <h3>Order Summary</h3>
-        <div class="row"><span>Subtotal</span><span>$${subtotal.toFixed(2)}</span></div>
-        <div class="row"><span>Shipping</span><span>${shipping === 0 ? '<span style="color:#16a34a;">FREE</span>' : '$'+shipping.toFixed(2)}</span></div>
-        <div class="row total"><span>Total</span><span>$${total.toFixed(2)}</span></div>
-        ${subtotal < 75 ? `<p style="font-size:0.75rem;color:var(--text-light);margin-top:8px;">Add $${(75 - subtotal).toFixed(2)} more for free shipping</p>` : ''}
+        <div class="row"><span>Subtotal</span><span>Rs.${subtotal.toFixed(2)}</span></div>
+        <div class="row"><span>Shipping</span><span>${shipping === 0 ? '<span style="color:#16a34a;">FREE</span>' : 'Rs.'+shipping.toFixed(2)}</span></div>
+        <div class="row total"><span>Total</span><span>Rs.${total.toFixed(2)}</span></div>
+        ${subtotal < 5000 ? `<p style="font-size:0.75rem;color:var(--text-light);margin-top:8px;">Add Rs.${(5000 - subtotal).toFixed(2)} more for free shipping</p>` : ''}
         <a href="checkout.html" class="btn btn-gold"><i class="fas fa-lock"></i> Checkout</a>
         <a href="index.html" style="display:block;text-align:center;margin-top:12px;font-size:0.8rem;color:var(--text-light);">Continue Shopping</a>
       </div>

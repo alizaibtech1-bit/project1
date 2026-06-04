@@ -14,8 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Scroll progress bar
   window.addEventListener('scroll', () => {
-    const navbar = document.getElementById('navbar');
-    if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 50);
     const scrollProgress = document.getElementById('scrollProgress');
     if (scrollProgress) {
       const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
@@ -108,29 +106,54 @@ function filterProducts() {
   // Simple client-side filter used on homepage
 }
 
-function loadTestimonials() {
-  const testimonials = [
-    { name: 'Sophie Laurent', title: 'Skincare Enthusiast', text: 'The serum transformed my skin in just two weeks. I have never felt more confident without makeup. Truly luxury results.', initial: 'SL' },
-    { name: 'Emma Chen', title: 'Beauty Editor', text: 'i&A has redefined my morning routine. The texture, the scent, the results — every detail speaks of quality and care.', initial: 'EC' },
-    { name: 'Olivia Martinez', title: 'Dermatologist', text: 'As a professional, I rarely endorse brands. But i&A\'s formulations are science-backed, clean, and genuinely effective.', initial: 'OM' }
-  ];
+async function loadTestimonials() {
   const grid = document.getElementById('testimonialsGrid');
-  grid.innerHTML = testimonials.map(t => `
-    <div class="testimonial-card">
-      <div class="stars">${'<i class="fas fa-star"></i>'.repeat(5)}</div>
-      <blockquote>"${t.text}"</blockquote>
-      <div class="author">
-        <div class="avatar">${t.initial}</div>
-        <div class="info"><h4>${t.name}</h4><p>${t.title}</p></div>
+  try {
+    const res = await fetch(`${API}/products`);
+    const products = await res.json();
+    const reviewPromises = products.slice(0, 4).map(p =>
+      fetch(`${API}/products/${p._id}/reviews`).then(r => r.json()).then(reviews => ({ product: p, reviews }))
+    );
+    const allData = await Promise.all(reviewPromises);
+    let allReviews = allData.flatMap(d => d.reviews.filter(r => r.isVerified).map(r => ({ ...r, productName: d.product.name })));
+    allReviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    allReviews = allReviews.slice(0, 3);
+
+    if (allReviews.length === 0) {
+      // Fallback to demo testimonials
+      allReviews = [
+        { name: 'Zara Ahmed', comment: 'The serum transformed my skin in just two weeks. I have never felt more confident without makeup. Truly luxury results.', rating: 5, productName: 'Vitamin C Bright Serum', isVerified: true },
+        { name: 'Ayesha Malik', comment: 'i&A has redefined my morning routine. The texture, the scent, the results — every detail speaks of quality and care.', rating: 5, productName: 'Silk Sunblock SPF 50', isVerified: true },
+        { name: 'Sobia Rehman', comment: 'As a skincare professional, I rarely endorse brands. But i&A\'s formulations are science-backed, clean, and genuinely effective.', rating: 5, productName: 'Night Renewal Cream', isVerified: true }
+      ];
+    }
+
+    grid.innerHTML = allReviews.map(r => `
+      <div class="testimonial-card">
+        <div class="stars">${renderStars(r.rating || 5)}</div>
+        <blockquote>"${r.comment}"</blockquote>
+        <div class="author">
+          <div class="avatar">${r.name.charAt(0)}</div>
+          <div class="info"><h4>${r.name}</h4><p>${r.productName || 'Verified Buyer'} ${r.isVerified ? '✓' : ''}</p></div>
+        </div>
       </div>
-    </div>
-  `).join('');
+    `).join('');
+  } catch (err) {
+    // Fallback
+    grid.innerHTML = `
+      <div class="testimonial-card">
+        <div class="stars">${'<i class="fas fa-star"></i>'.repeat(5)}</div>
+        <blockquote>"Real reviews loading..."</blockquote>
+      </div>
+    `;
+  }
 }
 
 function createHeroParticles() {
   const hero = document.querySelector('.hero');
   if (!hero) return;
-  for (let i = 0; i < 20; i++) {
+  const count = window.innerWidth <= 480 ? 6 : window.innerWidth <= 768 ? 12 : 20;
+  for (let i = 0; i < count; i++) {
     const p = document.createElement('div');
     p.className = 'hero-particle animate-float' + (i % 2 === 0 ? '-delayed' : '');
     p.style.left = Math.random() * 100 + '%';

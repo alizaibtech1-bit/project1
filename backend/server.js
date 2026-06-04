@@ -10,7 +10,14 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowed = [undefined, 'null', 'http://localhost:5500', 'http://localhost:3000', 'http://localhost:5000', 'https://ianda.netlify.app', 'https://ianda-backend.onrender.com'];
+    if (!origin || allowed.includes(origin)) callback(null, true);
+    else callback(null, true); // Allow all in development
+  }
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(passport.initialize());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
@@ -20,6 +27,7 @@ app.use('/api/products', require('./routes/products'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/oauth', require('./routes/oauth'));
+app.use('/api/seed', require('./routes/seed'));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

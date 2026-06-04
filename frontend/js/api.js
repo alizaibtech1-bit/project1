@@ -1,4 +1,4 @@
-const API = 'http://localhost:5000/api';
+const API = 'https://ianda-backend.onrender.com/api';
 
 function getToken() { return localStorage.getItem('glow_token'); }
 function getUser() { return JSON.parse(localStorage.getItem('glow_user') || '{}'); }
@@ -19,10 +19,74 @@ async function apiFetch(endpoint, options = {}) {
   return res;
 }
 
+// Loading screen: hide immediately if bfcached page
+if (performance.navigation?.type === 2) {
+  document.getElementById('loadingScreen')?.classList.add('hidden');
+}
+
+// Mobile announcement bar ticker
+function initMobileTicker() {
+  const inner = document.querySelector('.announcement-inner');
+  if (!inner) return;
+  if (window.innerWidth <= 768) {
+    if (inner.querySelector('.ticker-track')) return;
+    const items = inner.querySelectorAll('span');
+    if (items.length < 2) return;
+    const track = document.createElement('div');
+    track.className = 'ticker-track';
+    const originalHTML = Array.from(items).map(s => s.outerHTML).join('');
+    track.innerHTML = originalHTML + originalHTML;
+    inner.innerHTML = '';
+    inner.appendChild(track);
+    inner.classList.add('is-ticker');
+  } else {
+    // Restore original layout on desktop
+    if (!inner.querySelector('.ticker-track')) return;
+    inner.classList.remove('is-ticker');
+    inner.innerHTML = '<span><i class="fas fa-truck"></i> Free Shipping on Orders Over Rs. 5,000</span><span><i class="fas fa-shield-alt"></i> 100% Authentic Products</span><span><i class="fas fa-headset"></i> 24/7 Customer Support</span>';
+  }
+}
+document.addEventListener('DOMContentLoaded', initMobileTicker);
+window.addEventListener('resize', initMobileTicker);
+
+// Navbar scroll handler
+document.addEventListener('DOMContentLoaded', () => {
+  const navbar = document.getElementById('navbar');
+  if (navbar) {
+    const annBar = document.querySelector('.announcement-bar');
+    const annHeight = annBar ? annBar.offsetHeight : 0;
+    if (window.scrollY > annHeight) navbar.classList.add('announcement-hidden');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 50);
+      const h = annBar ? document.querySelector('.announcement-bar').offsetHeight : 0;
+      navbar.classList.toggle('announcement-hidden', window.scrollY > h);
+    });
+  }
+});
+
 function toggleMobileMenu() {
   const links = document.querySelector('.nav-links');
-  links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
-  if (window.innerWidth > 768) links.style.display = 'flex';
+  const hamburger = document.querySelector('.hamburger');
+  const open = links.classList.contains('show');
+  if (!open) {
+    links.classList.add('show');
+    hamburger.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    let overlay = document.getElementById('mobileOverlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'mobileOverlay';
+      overlay.onclick = toggleMobileMenu;
+      document.body.appendChild(overlay);
+    }
+    requestAnimationFrame(() => overlay.classList.add('show'));
+  } else {
+    const overlay = document.getElementById('mobileOverlay');
+    if (overlay) overlay.classList.remove('show');
+    links.classList.remove('show');
+    hamburger.classList.remove('active');
+    document.body.style.overflow = '';
+  }
 }
 
 function toggleWishlist(productId, btn) {
@@ -35,6 +99,17 @@ function toggleWishlist(productId, btn) {
     btn.querySelector('i').classList.toggle('fas');
     btn.querySelector('i').classList.toggle('far');
   });
+}
+
+function renderStars(rating) {
+  const num = parseFloat(rating) || 0;
+  let s = '';
+  for (let i = 1; i <= 5; i++) {
+    if (i <= num) s += '<i class="fas fa-star"></i>';
+    else if (i - 0.5 <= num) s += '<i class="fas fa-star-half-alt"></i>';
+    else s += '<i class="far fa-star"></i>';
+  }
+  return s;
 }
 
 function createProductCard(p) {

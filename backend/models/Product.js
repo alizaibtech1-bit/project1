@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema({
   category: { type: String, required: true, enum: ['Facewash', 'Sunblock', 'Serums', 'Creams'] },
   price: { type: Number, required: true },
   originalPrice: { type: Number },
-  image: { type: String, required: true },
+  image: { type: String, default: '' },
   images: [String],
   rating: { type: Number, default: 0 },
   numReviews: { type: Number, default: 0 },

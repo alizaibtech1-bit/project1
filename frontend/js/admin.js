@@ -9,6 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('adminApp').style.display = 'flex';
   document.getElementById('adminLogin').style.display = 'none';
   document.getElementById('adminName').textContent = user.name || 'Admin';
+
+  // Ping backend to wake it up
+  fetch(API.replace('/api','')).then(r => {
+    document.getElementById('backendStatus').innerHTML = '<i class="fas fa-circle" style="color:#16a34a;font-size:0.5rem;"></i> Backend Online';
+  }).catch(() => {
+    document.getElementById('backendStatus').innerHTML = '<i class="fas fa-circle" style="color:#dc2626;font-size:0.5rem;"></i> Backend Offline — Wake it up at <a href="https://ianda-backend.onrender.com" target="_blank" style="color:var(--gold);text-decoration:underline;">ianda-backend.onrender.com</a>';
+  });
+
   loadDashboard();
 });
 
@@ -173,26 +181,39 @@ document.getElementById('productForm')?.addEventListener('submit', async (e) => 
   const fileInput = document.getElementById('prodImage');
   if (fileInput.files[0]) formData.append('image', fileInput.files[0]);
 
-  try {
-    const url = isEdit ? `${API}/products/${id}` : `${API}/products`;
-    const method = isEdit ? 'PUT' : 'POST';
-    const res = await fetch(url, {
-      method,
-      headers: { 'Authorization': `Bearer ${getToken()}` },
-      body: formData
-    });
+  const submitBtn = e.target.querySelector('button[type="submit"]');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Saving...';
 
-    if (res.ok) {
-      closeProductModal();
-      loadAdminProducts();
-      alert(isEdit ? 'Product updated!' : 'Product created!');
-    } else {
-      const data = await res.json();
-      alert(data.message || 'Error saving product');
+  const trySave = async (retries = 2) => {
+    try {
+      const url = isEdit ? `${API}/products/${id}` : `${API}/products`;
+      const method = isEdit ? 'PUT' : 'POST';
+      const res = await fetch(url, {
+        method,
+        headers: { 'Authorization': `Bearer ${getToken()}` },
+        body: formData
+      });
+
+      if (res.ok) {
+        closeProductModal();
+        loadAdminProducts();
+        alert(isEdit ? 'Product updated!' : 'Product created!');
+        return;
+      }
+      const data = await res.json().catch(() => ({}));
+      alert(data.message || 'Error saving product (HTTP ' + res.status + ')');
+    } catch (err) {
+      if (retries > 0) {
+        setTimeout(() => trySave(retries - 1), 3000);
+      } else {
+        alert('Backend not reachable after multiple attempts. Please visit https://ianda-backend.onrender.com to wake it up, then try again.');
+      }
     }
-  } catch (err) {
-    alert('Error saving product. Make sure the backend is running.');
-  }
+  };
+  trySave();
+  submitBtn.disabled = false;
+  submitBtn.textContent = isEdit ? 'Update Product' : 'Add Product';
 });
 
 async function deleteProduct(id) {

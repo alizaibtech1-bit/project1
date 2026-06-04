@@ -48,7 +48,12 @@
 
       <main class="admin-main">
         <div class="admin-header">
-          <h2 id="pageTitle">Dashboard</h2>
+          <div>
+            <h2 id="pageTitle">Dashboard</h2>
+            <span id="backendStatus" style="font-size:0.7rem;color:var(--text-light);display:flex;align-items:center;gap:6px;margin-top:4px;">
+              <i class="fas fa-circle" style="color:var(--gold);font-size:0.5rem;"></i> Checking backend...
+            </span>
+          </div>
           <div class="admin-user">
             <span id="adminName">Admin</span>
             <i class="fas fa-user-circle" style="font-size:1.5rem;color:var(--gold);"></i>
@@ -91,8 +96,8 @@
         <div class="form-group"><label>Name</label><input type="text" id="prodName" required></div>
         <div class="form-group"><label>Description</label><textarea id="prodDesc" required></textarea></div>
         <div class="form-row">
-          <div class="form-group"><label>Price ($)</label><input type="number" step="0.01" id="prodPrice" required></div>
-          <div class="form-group"><label>Original Price ($)</label><input type="number" step="0.01" id="prodOrigPrice"></div>
+          <div class="form-group"><label>Price (Rs.)</label><input type="number" step="0.01" id="prodPrice" required></div>
+          <div class="form-group"><label>Original Price (Rs.)</label><input type="number" step="0.01" id="prodOrigPrice"></div>
         </div>
         <div class="form-row">
           <div class="form-group"><label>Category</label>
