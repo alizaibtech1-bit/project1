@@ -18,9 +18,8 @@ router.get('/', async (req, res) => {
       { name: 'Rich Moisture Cream', slug: 'rich-moisture-cream', description: 'Nourishing daily cream', price: 18500, originalPrice: 21800, category: 'Creams', countInStock: 28, rating: 4.4, numReviews: 156, image: '/uploads/cream2.jpg', skinType: 'Normal Skin', ingredients: 'Squalane, Peptides', howToUse: 'Apply after serum' }
     ];
     await Product.insertMany(products);
-    const hashed = await bcrypt.hash('admin123', 10);
-    await User.create({ name: 'Admin', email: 'admin@glow.com', password: hashed, role: 'admin' });
-    await User.create({ name: 'User', email: 'user@glow.com', password: hashed, role: 'user' });
+    await User.create({ name: 'Admin', email: 'admin@glow.com', password: 'admin123', role: 'admin' });
+await User.create({ name: 'User', email: 'user@glow.com', password: 'admin123', role: 'user' });
     res.send('Database seeded! 8 products, 2 users created.');
   } catch (err) {
     res.send('Error: ' + err.message);
