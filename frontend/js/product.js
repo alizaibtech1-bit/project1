@@ -24,11 +24,15 @@ async function loadProduct() {
     div.innerHTML = `
       <div class="product-detail-layout">
         <div class="product-detail-image">
-          <img src="${API.replace('/api','')}${p.image || 'https://via.placeholder.com/500?text='+encodeURIComponent(p.name)}" alt="${p.name}">
+          <div class="img-wrap">
+            <img src="${API.replace('/api','')}${p.image || 'https://via.placeholder.com/500?text='+encodeURIComponent(p.name)}" alt="${p.name}">
+            <div class="zoom-hint"><i class="fas fa-expand"></i></div>
+          </div>
         </div>
         <div class="product-detail-info">
           <div class="product-category">${p.category}</div>
           <h1>${p.name}</h1>
+          <div class="product-variant-line"></div>
           <div class="product-rating">
             <div class="stars">${renderStars(avgRating)}</div>
             <span>${avgRating} (${reviews.length > 0 ? reviews.length : p.numReviews || 0} reviews)</span>
