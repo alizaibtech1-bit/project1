@@ -1257,10 +1257,13 @@ img { max-width: 100%; display: block; }
   gap: 24px;
 }
 .slider-track .product-card { width: calc(25% - 18px); flex-shrink: 0; }
-.slider-track .product-card .card-image { aspect-ratio: 1; }
-.slider-track .product-card .card-body { padding: 16px 16px 12px; }
-.slider-track .product-card .card-body h3 { font-size: 1rem; }
-.slider-track .product-card .add-to-cart { width: calc(100% - 32px); margin: 0 16px 14px; padding: 10px 0; font-size: 0.6rem; letter-spacing: 1.5px; }
+.slider-track .product-card .card-image { aspect-ratio: 4/3; }
+.slider-track .product-card .card-body { padding: 14px 16px 10px; }
+.slider-track .product-card .card-body .card-category { font-size: 0.55rem; margin-bottom: 4px; }
+.slider-track .product-card .card-body h3 { font-size: 0.95rem; margin-bottom: 4px; }
+.slider-track .product-card .card-body .rating { margin-bottom: 6px; font-size: 0.7rem; }
+.slider-track .product-card .card-body .price { font-size: 1.1rem; }
+.slider-track .product-card .add-to-cart { width: calc(100% - 32px); margin: 0 16px 12px; padding: 9px 0; font-size: 0.6rem; letter-spacing: 1.5px; }
 .slider-btn {
   position: absolute;
   top: 50%;
