@@ -22,7 +22,8 @@ router.get('/', async (req, res) => {
       { name: 'Gentle Foaming Cleanser', slug: 'gentle-foaming-cleanser', description: 'Sulfate-free foaming cleanser that removes makeup without stripping.', price: 9000, category: 'Facewash', countInStock: 45, rating: 4.3, numReviews: 0, image: '/uploads/facewash2.jpg', skinType: 'Sensitive Skin', ingredients: 'Chamomile, Oat Extract', howToUse: 'Use morning and night' },
       { name: 'Matte Sunblock SPF 30', slug: 'matte-sunblock-spf-30', description: 'Oil-free mattifying sunblock for combination and oily skin.', price: 10600, category: 'Sunblock', countInStock: 38, rating: 4.6, numReviews: 0, image: '/uploads/sunblock2.jpg', skinType: 'Oily Skin', ingredients: 'Salicylic Acid, Zinc', howToUse: 'Apply as last step' },
       { name: 'Hyaluronic Acid Serum', slug: 'hyaluronic-acid-serum', description: 'Ultra-light hydration serum with triple-weight hyaluronic acid for deep hydration.', price: 16200, category: 'Serums', countInStock: 42, rating: 4.8, numReviews: 0, image: '/uploads/serum2.jpg', skinType: 'Dehydrated Skin', ingredients: 'Hyaluronic Acid, Ceramides', howToUse: 'Apply to damp skin' },
-      { name: 'Rich Moisture Cream', slug: 'rich-moisture-cream', description: 'Deeply nourishing cream with shea butter and squalane for dry skin.', price: 18500, originalPrice: 21800, category: 'Creams', countInStock: 28, rating: 4.4, numReviews: 0, image: '/uploads/cream2.jpg', skinType: 'Normal Skin', ingredients: 'Squalane, Peptides', howToUse: 'Apply after serum' }
+      { name: 'Rich Moisture Cream', slug: 'rich-moisture-cream', description: 'Deeply nourishing cream with shea butter and squalane for dry skin.', price: 18500, originalPrice: 21800, category: 'Creams', countInStock: 28, rating: 4.4, numReviews: 0, image: '/uploads/cream2.jpg', skinType: 'Normal Skin', ingredients: 'Squalane, Peptides', howToUse: 'Apply after serum' },
+      { name: 'Glow Facial Kit', slug: 'glow-facial-kit', description: 'Complete at-home facial kit with cleansing, exfoliating, and nourishing steps for a salon-quality glow.', price: 15000, originalPrice: 18000, category: 'Facials', countInStock: 25, rating: 4.6, numReviews: 0, image: '/uploads/facial1.jpg', isFeatured: true, skinType: 'All Skin Types', ingredients: 'Vitamin C, Hyaluronic Acid, Niacinamide', howToUse: 'Follow included guide for each step' }
     ]);
 
     // Password will be auto-hashed by User model pre('save') hook
@@ -57,7 +58,7 @@ router.get('/', async (req, res) => {
       }
     }
 
-    res.send('Database seeded! 8 products, 2 users, ' + reviewData.length + ' reviews created.');
+    res.send('Database seeded! 9 products, 2 users, ' + reviewData.length + ' reviews created.');
   } catch (err) {
     res.send('Error: ' + err.message);
   }

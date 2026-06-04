@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadAllProducts();
   loadTestimonials();
   filterProducts();
+  startLiveClock();
 });
 
 let featuredIndex = 0;
@@ -71,6 +72,7 @@ let allProducts = [];
 
 async function loadCategories() {
   const cats = [
+    { name: 'Facials', icon: 'fas fa-spa', desc: 'Professional facial treatments' },
     { name: 'Facewash', icon: 'fas fa-hand-sparkles', desc: 'Gentle daily cleansers' },
     { name: 'Sunblock', icon: 'fas fa-sun', desc: 'Broad spectrum protection' },
     { name: 'Serums', icon: 'fas fa-droplet', desc: 'Targeted treatments' },
@@ -96,10 +98,30 @@ async function loadAllProducts() {
   try {
     const res = await fetch(`${API}/products`);
     allProducts = await res.json();
-    document.getElementById('productsGrid').innerHTML = allProducts.map(p => createProductCard(p)).join('');
+    renderProductsByCategory(allProducts, 'productsGrid');
   } catch (err) {
     showDemoProducts('productsGrid');
   }
+}
+
+function renderProductsByCategory(products, containerId) {
+  const order = ['Facials', 'Facewash', 'Sunblock', 'Serums', 'Creams'];
+  const grouped = {};
+  products.forEach(p => {
+    const cat = p.category || 'Other';
+    if (!grouped[cat]) grouped[cat] = [];
+    grouped[cat].push(p);
+  });
+  const html = order.filter(c => grouped[c]).map(c => `
+    <div class="category-row">
+      <div class="category-row-header">
+        <h3 class="category-row-title">${c}</h3>
+        <a href="search.html?category=${c}" class="category-row-link">View All <i class="fas fa-arrow-right"></i></a>
+      </div>
+      <div class="products-grid">${grouped[c].map(p => createProductCard(p)).join('')}</div>
+    </div>
+  `).join('');
+  document.getElementById(containerId).innerHTML = html;
 }
 
 function filterProducts() {
@@ -166,6 +188,18 @@ function createHeroParticles() {
   }
 }
 
+function startLiveClock() {
+  function updateClock() {
+    const el = document.getElementById('liveTime');
+    if (!el) return;
+    const now = new Date();
+    const opts = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true, timeZone: 'Asia/Karachi' };
+    el.textContent = now.toLocaleTimeString('en-PK', opts);
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+}
+
 function showDemoProducts(targetId) {
   const demos = [
     { _id: 'demo1', name: 'Hydrating Facewash', price: 28.00, originalPrice: 35.00, category: 'Facewash', rating: 4.5, numReviews: 124, image: '' },
@@ -177,6 +211,5 @@ function showDemoProducts(targetId) {
     { _id: 'demo7', name: 'Hyaluronic Acid Serum', price: 58.00, category: 'Serums', rating: 4.8, numReviews: 341, image: '' },
     { _id: 'demo8', name: 'Rich Moisture Cream', price: 66.00, originalPrice: 78.00, category: 'Creams', rating: 4.4, numReviews: 156, image: '' }
   ];
-  const grid = document.getElementById(targetId);
-  if (grid) grid.innerHTML = demos.map(p => createProductCard(p)).join('');
+  renderProductsByCategory(demos, targetId);
 }
