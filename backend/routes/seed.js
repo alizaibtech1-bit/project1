@@ -1,10 +1,14 @@
 const router = require('express').Router();
 const Product = require('../models/Product');
 const User = require('../models/User');
-const bcrypt = require('bcryptjs');
+
 
 router.get('/', async (req, res) => {
   try {
+       if (req.query.reset) {
+      await Product.deleteMany({});
+      await User.deleteMany({});
+    }
     const count = await Product.countDocuments();
     if (count > 0) return res.send('Already seeded — ' + count + ' products exist');
         const products = [
